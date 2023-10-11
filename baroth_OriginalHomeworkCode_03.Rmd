@@ -9,6 +9,12 @@ output: rmdformats::readthedown
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r image, echo=FALSE, fig.align='center', out.width='88%', fig.cap='*Warm Bodies* (2013) a.k.a. quality cinema'}
+```{r image, echo=FALSE, fig.align='center', out.width='88%', fig.cap='Warm Bodies (2013) a.k.a. quality cinema'}
 knitr::include_graphics("C:/Users/brook/OneDrive/Documents/2023_Fall/AN588/AN588_Zombies_baroth/warm-bodies-stare-and-groan.gif")
+```
+
+```{r read data}
+zombiedata <- (read.csv("https://github.com/fuzzyatelin/fuzzyatelin.github.io/blob/master/AN588_Fall23/zombies.csv"))
+
+head(zombiedata)
 ```
