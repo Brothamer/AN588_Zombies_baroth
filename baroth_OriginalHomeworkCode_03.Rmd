@@ -13,8 +13,186 @@ knitr::opts_chunk$set(echo = TRUE)
 knitr::include_graphics("C:/Users/brook/OneDrive/Documents/2023_Fall/AN588/AN588_Zombies_baroth/warm-bodies-stare-and-groan.gif")
 ```
 
+## Background
+
+This data includes the first name, last name, and gender of the entire population of 1000 people who have survived the zombie apocalypse and are now ekeing out an existence somewhere on the East Coast, along with several other variables (height, weight, age, number of years of education, number of zombies they have killed, and college major
 ```{r read data}
-zombiedata <- (read.csv("https://github.com/fuzzyatelin/fuzzyatelin.github.io/blob/master/AN588_Fall23/zombies.csv"))
+zombiedata <- (read.csv("C:/Users/brook/OneDrive/Documents/2023_Fall/AN588/zombiesdata.csv"))
 
 head(zombiedata)
 ```
+## 1. Calculate the population mean and standard deviation for each quantitative random variable (height, weight, age, number of zombies killed, and years of education). 
+NOTE: You will not want to use the built in var() and sd() commands as these are for samples.
+
+First write a quick function to calculate standard deviation since we cannot use sd() for a population.
+```{r stdev function}
+pop_v <- function(x) {sum((x - mean(x))^2)/(length(x))}
+pop_sd <- function(x) {sqrt(pop_v(x))}
+```
+
+### Height
+```{r population height}
+pop.height.mean<-mean(zombiedata$height)
+pop.height.mean
+pop.height.sd<-pop_sd(zombiedata$height)
+pop.height.sd
+```
+### Weight
+```{r population weight}
+pop.weight.mean<-mean(zombiedata$weight)
+pop.weight.mean
+pop.weight.sd<-pop_sd(zombiedata$weight)
+pop.weight.sd
+```
+### Age
+```{r population age}
+pop.age.mean<-mean(zombiedata$age)
+pop.age.mean
+pop.age.sd<-pop_sd(zombiedata$age)
+pop.age.sd
+```
+### Zombies Killed
+```{r population zk}
+pop.zk.mean<-mean(zombiedata$zombies_killed)
+pop.zk.mean
+pop.zk.sd<-pop_sd(zombiedata$zombies_killed)
+pop.zk.sd
+```
+### Years of Education
+```{r population yoe}
+pop.yoe.mean<-mean(zombiedata$years_of_education)
+pop.yoe.mean
+pop.yoe.sd<-pop_sd(zombiedata$years_of_education)
+pop.yoe.sd
+```
+
+## 2. Use {ggplot} to make boxplots of each of these variables by gender.
+
+```{r visualization packages, warning=FALSE}
+library(ggplot2)
+library(ggpubr)
+```
+
+```{r box plots}
+heightbox <- ggplot(zombiedata, #create a plot using zombiedata
+        aes(x=gender, y=height, fill=gender)) + #use gender as the x-axis and height as the y-axis. Fill the colors by gender
+    geom_boxplot() + #make it a boxplot
+    theme_classic() + #use theme_classic because it looks nicer than the default
+    labs(title = "Height of Survivors", x = "Gender", y = "Height (in)") #label the title and axes
+#Now rinse and repeat for the other plots
+weightbox <- ggplot(zombiedata, aes(x=gender, y=weight, fill=gender)) + geom_boxplot() + theme_classic() +   labs(title = "Weight of Survivors",x = "Gender", y = "Weight (lbs)")
+agebox <- ggplot(zombiedata, aes(x=gender, y=age, fill=gender)) + geom_boxplot() + theme_classic() + labs(title = "Age of Survivors",x = "Gender", y = "Age (years)")
+zkbox <- ggplot(zombiedata, aes(x=gender, y=zombies_killed, fill=gender)) + geom_boxplot() + theme_classic() +   labs(title = "Surivors' Zombies Killed",x = "Gender", y = "Number of Zombies Killed")
+yoebox <- ggplot(zombiedata, aes(x=gender, y=years_of_education, fill=gender)) + geom_boxplot() + theme_classic() +   labs(title = "Survivors' Years of Ed",x = "Gender", y = "Years of Education")
+
+ggarrange(heightbox, weightbox, agebox, zkbox, yoebox,ncol = 3, nrow = 2, #Arrange all five plots into a 3x2 panel
+          legend="none") #Don't show the legend for each plot because that's too busy and not necessary
+```
+
+## 3. Use {ggplot} to make scatterplots of height and weight in relation to age. Do these variables seem to be related? In what way?
+
+```{r scatterplots}
+heightagescatter <- ggplot(zombiedata, #create a plot using zombiedata
+          aes(x=age, y=height)) + #use age as the x-axis and height as the y-axis
+      geom_point(size=2, shape=1, color="#c7254e") + #make it a scatterplot and define the appearance of the points
+      theme_classic() + #use theme_classic() because it looks nicer than the default
+      labs(title = "Height by Age",x = "Age (years)", y = "Height (in)") #label the title and axes
+#Repeat for weight
+weightagescatter <- ggplot(zombiedata, aes(x=age, y=weight)) + geom_point(size=2, shape=1, color="#c7254e") + theme_classic() +   labs(title = "Weight by Age",x = "Age (years)", y = "Weight (lbs)")
+
+ggarrange(heightagescatter, weightagescatter, #Arrange all five plots into a 3x2 panel
+          ncol = 2, nrow = 1, legend="none") #Don't show the legend for each plot because that's too busy and not necessary
+```
+Age and height certainly seem to be related in that older survivors are taller. Age and weight also appear to be related in that older survivors seem to weigh more.
+
+## 4. Using histograms and Q-Q plots, check whether the quantitative variables seem to be drawn from a normal distribution. Which seem to be and which do not (hint: not all are drawn from the normal distribution)? For those that are not normal, can you determine from which common distribution they are drawn?
+
+### Height
+```{r hist and Q-Q height}
+hist(zombiedata$height, main = "Histogram of Survivor Height")
+qqnorm(zombiedata$height, main = "Normal QQ plot of Survivor Height")
+qqline(zombiedata$height, col = "#c7254e")
+```
+Height appears to be normally distributed.
+
+### Weight
+```{r hist and Q-Q weight}
+hist(zombiedata$weight, main = "Histogram of Survivor Weight")
+qqnorm(zombiedata$weight, main = "Normal QQ plot of Survivor Weight")
+qqline(zombiedata$weight, col = "#c7254e")
+```
+Weight appears to be normally distributed.
+
+### Age
+```{r hist and Q-Q age}
+hist(zombiedata$age, main = "Histogram of Survivor Age")
+qqnorm(zombiedata$age, main = "Normal QQ plot of Survivor Age")
+qqline(zombiedata$age, col = "#c7254e")
+```
+Age appears to be drawn from a normal distribution.
+
+### Zombies Killed
+```{r hist and Q-Q zombies killed}
+hist(zombiedata$zombies_killed, main = "Histogram of Survivor Zombies Killed")
+qqnorm(zombiedata$zombies_killed, main = "Normal QQ plot of Zombies Killed")
+qqline(zombiedata$zombies_killed, col = "#c7254e")
+```
+Number of zombies killed is definitely not normally distributed. It may be a poisson distribution since it is open ended counts of the independently occuring events of survivors having killed a certain number of zombies.
+
+### Years of Education
+```{r hist and Q-Q years of education}
+hist(zombiedata$years_of_education, main = "Histogram of Survivor Years of Education")
+qqnorm(zombiedata$years_of_education, main = "Normal QQ plot of Survivor Years of Education")
+qqline(zombiedata$years_of_education, col = "#c7254e")
+```
+Years of education is definitely not normally distributed. It may be a poisson distribution since it is open ended counts of the independently occuring events of survivors having completed a certain number of years of education.
+
+## 5. Now use the sample() function to sample ONE subset of 30 zombie survivors (without replacement) from this population and calculate the mean and sample standard deviation for each variable. Also estimate the standard error for each variable, and construct the 95% confidence interval for each mean. Note that for the variables that are not drawn from the normal distribution, you may need to base your estimate of the CIs on slightly different code than for the normal…
+
+```{r sample30}
+library(dplyr)
+set.seed(96) #set seed to any number so that every time you run this code, you get the same sample
+sample30 <- sample_n(zombiedata, 30, replace=FALSE) #use sample_n() to sample whole rows from a dataframe. Using sample() can only sample from one vector like zombiedata$height. #replace=FALSE is the default, but why not specify it anyway, just to make sure.
+sample30 #take a peek at the sample
+```
+### Height
+```{r sample30 height}
+sample.height.mean <- mean(sample30$height)
+sample.height.stdev <- sd(sample30$height)
+sample.height.mean
+sample.height.stdev
+```
+
+### Weight
+```{r sample30 weight}
+sample.weight.mean <- mean(sample30$weight)
+sample.weight.stdev <- sd(sample30$weight)
+sample.weight.mean
+sample.weight.stdev
+```
+
+### Age
+```{r sample30 age}
+sample.age.mean <- mean(sample30$age)
+sample.age.stdev <- sd(sample30$age)
+sample.age.mean
+sample.age.stdev
+```
+
+### Zombies Killed
+```{r sample30 zk}
+sample.zk.mean <- mean(sample30$zombies_killed)
+sample.zk.stdev <- sd(sample30$zombies_killed)
+sample.zk.mean
+sample.zk.stdev
+```
+
+### Years of Education
+```{r sample30 yoe}
+sample.yoe.mean <- mean(sample30$years_of_education)
+sample.yoe.stdev <- sd(sample30$years_of_education)
+sample.yoe.mean
+sample.yoe.stdev
+```
+
+## 6. Now draw 99 more random samples of 30 zombie apocalypse survivors, and calculate the mean for each variable for each of these samples. Together with the first sample you drew, you now have a set of 100 means for each variable (each based on 30 observations), which constitutes a sampling distribution for each variable. What are the means and standard deviations of this distribution of means for each variable? How do the standard deviations of means compare to the standard errors estimated in [5]? What do these sampling distributions look like (a graph might help here)? Are they normally distributed? What about for those variables that you concluded were not originally drawn from a normal distribution?
