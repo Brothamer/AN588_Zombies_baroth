@@ -1,0 +1,14 @@
+---
+title: "baroth_OriginalHomeworkCode_03"
+author: "Brooke Rothamer"
+date: "2023-10-11"
+output: rmdformats::readthedown
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r image, echo=FALSE, fig.align='center', out.width='88%', fig.cap='*Warm Bodies* (2013) a.k.a. quality cinema'}
+knitr::include_graphics("C:/Users/brook/OneDrive/Documents/2023_Fall/AN588/AN588_Zombies_baroth/warm-bodies-stare-and-groan.gif")
+```
