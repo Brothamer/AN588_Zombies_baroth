@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r image, echo=FALSE, fig.align='center', out.width='88%', fig.cap='Warm Bodies (2013) a.k.a. quality cinema'}
 knitr::include_graphics("C:/Users/brook/OneDrive/Documents/2023_Fall/AN588/AN588_Zombies_baroth/warm-bodies-stare-and-groan.gif")
 ```
+Note: sorry that I didn't use the path directly linked to the data on Github. It wasn't loading correctly.
 
 ## Background
 
